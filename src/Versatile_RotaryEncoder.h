@@ -15,10 +15,7 @@
 
 #include <Arduino.h>
 
-#define SHORTPRESS 100
-#define LONGPRESS 1000
-
-class BoxEncoder {
+class Versatile_RotaryEncoder {
     public:
         enum Encoder : uint8_t {inactive, release, press, hold, rotate, pressrotate, heldrotate};
         enum Button : uint8_t {released, holdup, switchup, switchdown, pressed, holddown, held};
@@ -34,6 +31,9 @@ class BoxEncoder {
         uint8_t rotaryBits = 0b11; 		// 8 bits
         uint8_t buttonBits = 0b111; 	// 8 bits
 
+        uint8_t read_interval_duration = 1;
+        uint8_t short_press_duration = 100;
+        uint16_t long_press_duration = 1000;
         uint32_t lastTouch = 0;
         uint32_t last_encoder_read = 0;
         
@@ -45,13 +45,17 @@ class BoxEncoder {
         functionHandleRotary handlePressRotate = nullptr;
         functionHandleRotary handleHeldRotate = nullptr;
         functionHandleButton handlePress = nullptr;
+        functionHandleButton handlePressRelease = nullptr;
         functionHandleButton handleLongPress = nullptr;
         functionHandleButton handleLongPressRelease = nullptr;
         functionHandleButton handlePressRotateRelease = nullptr;
         functionHandleButton handleHeldRotateRelease = nullptr;
     public:
-        BoxEncoder(int, int, int);
-        void ReadEncoder();
+        Versatile_RotaryEncoder(uint8_t, uint8_t, uint8_t);
+        bool ReadEncoder();
+        void setReadIntervalDuration(uint8_t);
+        void setShortPressDuration(uint8_t);
+        void setLongPressDuration(uint16_t);
         Rotary getRotary();
         Button getButton();
         Encoder getEncoder();
@@ -61,6 +65,7 @@ class BoxEncoder {
         void setHandlePressRotate(functionHandleRotary);
         void setHandleHeldRotate(functionHandleRotary);
         void setHandlePress(functionHandleButton);
+        void setHandlePressRelease(functionHandleButton);
         void setHandleLongPress(functionHandleButton);
         void setHandleLongPressRelease(functionHandleButton);
         void setHandlePressRotateRelease(functionHandleButton);

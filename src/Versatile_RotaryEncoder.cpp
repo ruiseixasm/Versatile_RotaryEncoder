@@ -12,7 +12,7 @@
 */
 #include "Versatile_RotaryEncoder.h"
 
-BoxEncoder::BoxEncoder(int clk, int dt, int sw) {
+Versatile_RotaryEncoder::Versatile_RotaryEncoder(uint8_t clk, uint8_t dt, uint8_t sw) {
     
     pin_clk = clk;
     pin_dt = dt;
@@ -24,9 +24,11 @@ BoxEncoder::BoxEncoder(int clk, int dt, int sw) {
     pinMode(pin_sw, INPUT_PULLUP);
 }
 
-void BoxEncoder::ReadEncoder() {
+bool Versatile_RotaryEncoder::ReadEncoder() {
+
+    bool handled_functions = false;
     
-    if (millis() - last_encoder_read > 1) {
+    if (millis() - last_encoder_read > (uint32_t)read_interval_duration || read_interval_duration == 0) {
         last_encoder_read = millis();
         encoderBits = digitalRead(pin_sw) << 2 | digitalRead(pin_clk) << 1 | digitalRead(pin_dt);
 
@@ -66,14 +68,14 @@ void BoxEncoder::ReadEncoder() {
             // Sets time since button was physically operated
             lastTouch = millis();
         
-        } else if (millis() - lastTouch > (uint32_t)SHORTPRESS) { // Same state
+        } else if (millis() - lastTouch > (uint32_t)short_press_duration) { // Same state
             switch (buttonBits) {
                 case 0b110:
                     buttonBits = 0b100;
                     button = switchdown;
                     break;
                 case 0b100:
-                    if (button == pressed && millis() - lastTouch > (uint32_t)LONGPRESS) {
+                    if (button == pressed && millis() - lastTouch > (uint32_t)long_press_duration) {
                         buttonBits = 0b000;
                         button = holddown;
                     } else {
@@ -99,35 +101,59 @@ void BoxEncoder::ReadEncoder() {
         }
 
         // ENCODER PROCESSING
+        if (rotary == stopped && button == released)
+            encoder = inactive;
+
         if (rotary != stopped) {
             if (button == released) {
                 encoder = rotate;
-                if (handleRotate != nullptr)
+                if (handleRotate != nullptr) {
                     handleRotate(rotary);
-            } else if (button > switchdown) {
+                    handled_functions = true;
+                }
+            } else if (button > switchdown && button < holddown || encoder == pressrotate) {
                 encoder = pressrotate;
-                if (handlePressRotate != nullptr)
+                if (handlePressRotate != nullptr) {
                     handlePressRotate(rotary);
-            } else if (button > pressed && encoder != pressrotate) {
+                    handled_functions = true;
+                }
+            } else if (button > pressed) {
                 encoder = heldrotate;
-                if (handleHeldRotate != nullptr)
+                if (handleHeldRotate != nullptr) {
                     handleHeldRotate(rotary);
+                    handled_functions = true;
+                }
             }
-        } else if (encoder == inactive) {
+        }
+
+        if (encoder == inactive) {
+            switch (button) {
+                case switchdown:
+                    encoder = press;
+                    if (handlePress != nullptr) {
+                        handlePress();
+                        handled_functions = true;
+                    }
+                    break;
+                default:
+                    // do nothing
+                    break;
+            }
+        } else if (encoder == press) {
             switch (button) {
                 case switchup:
-                {
-                    encoder = press;
-                    if (handlePress != nullptr)
-                        handlePress();
-                }
+                    encoder = release;
+                    if (handlePressRelease != nullptr) {
+                        handlePressRelease();
+                        handled_functions = true;
+                    }
                     break;
                 case holddown:
-                {
                     encoder = hold;
-                    if (handleLongPress != nullptr)
+                    if (handleLongPress != nullptr) {
                         handleLongPress();
-                }
+                        handled_functions = true;
+                    }
                     break;
                 default:
                     // do nothing
@@ -136,91 +162,116 @@ void BoxEncoder::ReadEncoder() {
         } else if (encoder == hold) {
             switch (button) {
                 case holdup:
-                {
                     encoder = release;
-                    if (handleLongPressRelease != nullptr)
+                    if (handleLongPressRelease != nullptr) {
                         handleLongPressRelease();
-                }
+                        handled_functions = true;
+                    }
                     break;
                 default:
                     // do nothing
                     break;
             }
-        } else if (encoder == pressrotate || encoder == heldrotate) {
+        } else if (encoder == pressrotate) {
             switch (button) {
                 case switchup:
-                {
-                    encoder = press;
-                    if (handlePressRotateRelease != nullptr)
-                        handlePressRotateRelease();
-                }
-                    break;
                 case holdup:
-                {
-                    encoder = press;
-                    if (handleHeldRotateRelease != nullptr)
-                        handleHeldRotateRelease();
-                }
+                    encoder = release;
+                    if (handlePressRotateRelease != nullptr) {
+                        handlePressRotateRelease();
+                        handled_functions = true;
+                    }
                     break;
                 default:
                     // do nothing
                     break;
             }
-        } else if (rotary == stopped && button == released)
-            encoder = inactive;
+        } else if (encoder == heldrotate) {
+            switch (button) {
+                case switchup:
+                case holdup:
+                    encoder = release;
+                    if (handleHeldRotateRelease != nullptr) {
+                        handleHeldRotateRelease();
+                        handled_functions = true;
+                    }
+                    break;
+                default:
+                    // do nothing
+                    break;
+            }
+        }
     }
+
+    return handled_functions;
 }
 
-BoxEncoder::Rotary BoxEncoder::getRotary () {
+void Versatile_RotaryEncoder::setReadIntervalDuration (uint8_t duration) {
+    read_interval_duration = duration;
+}
+
+void Versatile_RotaryEncoder::setShortPressDuration (uint8_t duration) {
+    short_press_duration = duration;
+}
+
+void Versatile_RotaryEncoder::setLongPressDuration (uint16_t duration) {
+    long_press_duration = duration;
+}
+
+Versatile_RotaryEncoder::Rotary Versatile_RotaryEncoder::getRotary () {
     return rotary;
 }
 
-BoxEncoder::Button BoxEncoder::getButton () {
+Versatile_RotaryEncoder::Button Versatile_RotaryEncoder::getButton () {
     return button;
 }
 
-BoxEncoder::Encoder BoxEncoder::getEncoder () {
+Versatile_RotaryEncoder::Encoder Versatile_RotaryEncoder::getEncoder () {
     return encoder;
 }
 
-uint8_t BoxEncoder::getEncoderBits () {
+uint8_t Versatile_RotaryEncoder::getEncoderBits () {
     return encoderBits >> 2;
 }
 
-uint8_t BoxEncoder::getButtonBits () {
+uint8_t Versatile_RotaryEncoder::getButtonBits () {
     return buttonBits;
 }
 
 // Setting Function Handlers
 
-void BoxEncoder::setHandleRotate(functionHandleRotary function_handler) {
+void Versatile_RotaryEncoder::setHandleRotate(functionHandleRotary function_handler) {
     handleRotate = function_handler;
 }
 
-void BoxEncoder::setHandlePressRotate(functionHandleRotary function_handler) {
+void Versatile_RotaryEncoder::setHandlePressRotate(functionHandleRotary function_handler) {
     handlePressRotate = function_handler;
 }
 
-void BoxEncoder::setHandleHeldRotate(functionHandleRotary function_handler) {
+void Versatile_RotaryEncoder::setHandleHeldRotate(functionHandleRotary function_handler) {
     handleHeldRotate = function_handler;
 }
 
-void BoxEncoder::setHandlePress(functionHandleButton function_handler) {
+void Versatile_RotaryEncoder::setHandlePress(functionHandleButton function_handler) {
     handlePress = function_handler;
 }
 
-void BoxEncoder::setHandleLongPress(functionHandleButton function_handler) {
+void Versatile_RotaryEncoder::setHandlePressRelease(functionHandleButton function_handler) {
+    handlePressRelease = function_handler;
+}
+
+void Versatile_RotaryEncoder::setHandleLongPress(functionHandleButton function_handler) {
     handleLongPress = function_handler;
 }
 
-void BoxEncoder::setHandleLongPressRelease(functionHandleButton function_handler) {
+void Versatile_RotaryEncoder::setHandleLongPressRelease(functionHandleButton function_handler) {
     handleLongPressRelease = function_handler;
 }
 
-void BoxEncoder::setHandlePressRotateRelease(functionHandleButton function_handler) {
+void Versatile_RotaryEncoder::setHandlePressRotateRelease(functionHandleButton function_handler) {
     handlePressRotateRelease = function_handler;
 }
 
-void BoxEncoder::setHandleHeldRotateRelease(functionHandleButton function_handler) {
+void Versatile_RotaryEncoder::setHandleHeldRotateRelease(functionHandleButton function_handler) {
     handleHeldRotateRelease = function_handler;
 }
