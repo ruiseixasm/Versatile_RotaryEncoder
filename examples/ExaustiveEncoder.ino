@@ -1,7 +1,6 @@
-#include <Arduino.h>
 #include <Versatile_RotaryEncoder.h>
 
-// Set here your encoder reading pins
+// Set here your encoder reading pins (Ex.: EC11 with breakout board)
 #define clk 17  // (A3)
 #define dt 18   // (A4)
 #define sw 19   // (A5)
@@ -88,7 +87,7 @@ void handleLongPress() {
 }
 
 void handleLongPressRelease() {
-	Serial.println("#7 Long pressed released");
+	Serial.println("#7 Long press released");
 }
 
 void handlePressRotateRelease() {

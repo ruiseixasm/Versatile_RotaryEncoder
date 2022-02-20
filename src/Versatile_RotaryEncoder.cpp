@@ -28,7 +28,7 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
 
     bool handled_functions = false;
     
-    if (millis() - last_encoder_read > (uint32_t)read_interval_duration || read_interval_duration == 0) {
+    if (millis() - last_encoder_read >= (uint32_t)read_interval_duration) {
         last_encoder_read = millis();
         encoderBits = digitalRead(pin_sw) << 2 | digitalRead(pin_clk) << 1 | digitalRead(pin_dt);
 
