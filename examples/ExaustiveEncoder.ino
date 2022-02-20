@@ -25,7 +25,7 @@ void setup() {
     Serial.begin(9600);
 	versatile_encoder = new Versatile_RotaryEncoder(clk, dt, sw);
 
-    // Load to the encoder all nedded handle functions here
+    // Load to the encoder all nedded handle functions here (up to 9 functions)
     versatile_encoder->setHandleRotate(handleRotate);
     versatile_encoder->setHandlePressRotate(handlePressRotate);
     versatile_encoder->setHandleHeldRotate(handleHeldRotate);
@@ -52,7 +52,7 @@ void loop() {
 // Implement your functions here accordingly to your needs
 
 void handleRotate(int8_t rotation) {
-	Serial.print("Rotated: ");
+	Serial.print("#1 Rotated: ");
     if (rotation > 0)
 	    Serial.println("Right");
     else
@@ -60,7 +60,7 @@ void handleRotate(int8_t rotation) {
 }
 
 void handlePressRotate(int8_t rotation) {
-	Serial.print("Pressed and rotated: ");
+	Serial.print("#2 Pressed and rotated: ");
     if (rotation > 0)
 	    Serial.println("Right");
     else
@@ -68,7 +68,7 @@ void handlePressRotate(int8_t rotation) {
 }
 
 void handleHeldRotate(int8_t rotation) {
-	Serial.print("Held and rotated: ");
+	Serial.print("#3 Held and rotated: ");
     if (rotation > 0)
 	    Serial.println("Right");
     else
@@ -76,25 +76,25 @@ void handleHeldRotate(int8_t rotation) {
 }
 
 void handlePress() {
-	Serial.println("Pressed");
+	Serial.println("#4 Pressed");
 }
 
 void handlePressRelease() {
-	Serial.println("Press released");
+	Serial.println("#5 Press released");
 }
 
 void handleLongPress() {
-	Serial.println("Long pressed");
+	Serial.println("#6 Long pressed");
 }
 
 void handleLongPressRelease() {
-	Serial.println("Long pressed released");
+	Serial.println("#7 Long pressed released");
 }
 
 void handlePressRotateRelease() {
-	Serial.println("Press rotate released");
+	Serial.println("#8 Press rotate released");
 }
 
 void handleHeldRotateRelease() {
-	Serial.println("Held rotate released");
+	Serial.println("#9 Held rotate released");
 }
