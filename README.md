@@ -9,7 +9,7 @@ Create the folder "libraries" in case it does not exist yet. Place all the files
 To use the library in your own sketch, select it from *Sketch > Import Library*.
 
 ## What is Versatile_RotaryEncoder
-The Versatile_RotaryEncoder library allows the callback of up to 9 different functions representing the same number of different encoder events. These different functions can bee associated with events like press rotate and long press among many others.
+The Versatile_RotaryEncoder library allows the callback of up to 9 different functions representing the same number of different encoder events. These different functions can be associated with events like press rotate and long press among many others.
 
 ## Usage
 ### **How to include**
