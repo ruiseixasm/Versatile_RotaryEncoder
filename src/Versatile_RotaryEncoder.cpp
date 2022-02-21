@@ -188,7 +188,6 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
             }
         } else if (encoder == heldrotate) {
             switch (button) {
-                case switchup:
                 case holdup:
                     encoder = release;
                     if (handleHeldRotateRelease != nullptr) {
