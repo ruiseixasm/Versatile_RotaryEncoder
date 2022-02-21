@@ -35,7 +35,7 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
         // ROTARY READ
         if ((rotaryBits & 0b11) != (encoderBits & 0b11)) {
 
-            rotaryBits = rotaryBits << 2 | encoderBits & 0b11;
+            rotaryBits = rotaryBits << 2 | (encoderBits & 0b11);
 
             // Bit Pairs Cyclic Sequence (CLK DT Pair Bits):
             // 1.   2.   3.   4.   5.
@@ -111,7 +111,7 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
                     handleRotate(rotary);
                     handled_functions = true;
                 }
-            } else if (button > switchdown && button < holddown || encoder == pressrotate) {
+            } else if ((button > switchdown && button < holddown) || encoder == pressrotate) {
                 encoder = pressrotate;
                 if (handlePressRotate != nullptr) {
                     handlePressRotate(rotary);
