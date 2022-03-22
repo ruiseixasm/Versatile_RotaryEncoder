@@ -1,4 +1,4 @@
-## **Versatile_RotaryEncoder Library V1.0.2** for Arduino
+## **Versatile_RotaryEncoder Library V1.0.3** for Arduino
 **Written by:** _Rui Seixas Monteiro_.
 
 ## Installation
@@ -26,6 +26,9 @@ void loop(){
 ```
 
 ### **Library functions**
+#### **`Versatile_RotaryEncoder(clk, dt, sw)`**
+This function returns a pointer to an object of type `Versatile_RotaryEncoder` to be used as function calls and sets.
+
 #### **`Versatile_RotaryEncoder.setHandleRotate( void (*)(int8_t rotation) )`**
 This function sets the handle function for the rotation of the encoder.
 Its only parameter is the handle function as `void (*)(int8_t rotation)` that would be used to process the rotation value.
@@ -95,7 +98,7 @@ This functions returns a `short unsigned int` representing the last button bits 
 The purpose of this function is to allow a more specific use of the library.
 
 ### **Examples**
-#### **Partial Dummy Memory Allocation (Testing Purposes)**
+#### **Exaustive usage of all possible 9 functions**
 ```Arduino
 #include <Versatile_RotaryEncoder.h>
 
