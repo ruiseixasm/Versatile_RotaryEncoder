@@ -1,4 +1,4 @@
-## **Versatile_RotaryEncoder Library V1.1.0** for Arduino
+## **Versatile_RotaryEncoder Library V1.1.1** for Arduino
 **Written by:** _Rui Seixas Monteiro_.
 
 ## Installation

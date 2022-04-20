@@ -65,6 +65,7 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
                     buttonBits = 0b001;
                 else
                     buttonBits = 0b110;
+                last_switch = millis();
             }
         } else {
             // Sets last time since button was physically operated
@@ -73,10 +74,9 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
         
         // CASCATE
         switch (buttonBits) {
-            case 0b110:
-                buttonBits = 0b100;
-                button = switchdown;
-                last_switchdown = millis();
+            case 0b111: break; // OFF cascate dead end
+            case 0b000: // ON cascate dead end
+                button = held;
                 break;
             case 0b100:
                 if (button == pressed && millis() - last_switchdown > (uint32_t)long_press_duration) {
@@ -86,20 +86,21 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
                     button = pressed;
                 }
                 break;
-            case 0b000: // ON cascate dead end
-                button = held;
+            case 0b011:
+                buttonBits = 0b111;
+                button = released;
                 break;
             case 0b001:
                 buttonBits = 0b011;
-                if (button == held || button == holddown) {
+                if (button == held || button == holddown)
                     button = holdup;
-                } else {
+                else
                     button = switchup;
-                }
                 break;
-            case 0b011: // OFF cascate dead end
-                buttonBits = 0b111;
-                button = released;
+            case 0b110:
+                buttonBits = 0b100;
+                button = switchdown;
+                last_switchdown = millis();
                 break;
         }
 
