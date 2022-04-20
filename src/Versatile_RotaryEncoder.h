@@ -34,8 +34,9 @@ class Versatile_RotaryEncoder {
         uint8_t read_interval_duration = 2; // by default reads the encoder each 2ms
         uint8_t short_press_duration = 30; // debounce duration to avoid noise triggering
         uint16_t long_press_duration = 1000;
-        uint32_t lastTouch = 0;
         uint32_t last_encoder_read = 0;
+        uint32_t last_switch;
+        uint32_t last_switchdown;
         
         Rotary rotary = stopped;
         Button button = released;
@@ -51,25 +52,25 @@ class Versatile_RotaryEncoder {
         functionHandleButton handlePressRotateRelease = nullptr;
         functionHandleButton handleHeldRotateRelease = nullptr;
     public:
-        Versatile_RotaryEncoder(uint8_t, uint8_t, uint8_t);
+        Versatile_RotaryEncoder(uint8_t clk, uint8_t dt, uint8_t sw);
         bool ReadEncoder();
-        void setReadIntervalDuration(uint8_t);
-        void setShortPressDuration(uint8_t);
-        void setLongPressDuration(uint16_t);
+        void setReadIntervalDuration(uint8_t duration);
+        void setShortPressDuration(uint8_t duration);
+        void setLongPressDuration(uint16_t duration);
         Rotary getRotary();
         Button getButton();
         Encoder getEncoder();
         uint8_t getEncoderBits();
         uint8_t getButtonBits();
-        void setHandleRotate(functionHandleRotary);
-        void setHandlePressRotate(functionHandleRotary);
-        void setHandleHeldRotate(functionHandleRotary);
-        void setHandlePress(functionHandleButton);
-        void setHandlePressRelease(functionHandleButton);
-        void setHandleLongPress(functionHandleButton);
-        void setHandleLongPressRelease(functionHandleButton);
-        void setHandlePressRotateRelease(functionHandleButton);
-        void setHandleHeldRotateRelease(functionHandleButton);
+        void setHandleRotate(functionHandleRotary function_handler);
+        void setHandlePressRotate(functionHandleRotary function_handler);
+        void setHandleHeldRotate(functionHandleRotary function_handler);
+        void setHandlePress(functionHandleButton function_handler);
+        void setHandlePressRelease(functionHandleButton function_handler);
+        void setHandleLongPress(functionHandleButton function_handler);
+        void setHandleLongPressRelease(functionHandleButton function_handler);
+        void setHandlePressRotateRelease(functionHandleButton function_handler);
+        void setHandleHeldRotateRelease(functionHandleButton function_handler);
 };
 
 #endif // VERSATILE_ROTARYENCODER_H_INCLUDED

@@ -57,47 +57,50 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
         if ((buttonBits & 0b001) != (encoderBits >> 2 & 0b001)) { // Change state (any action)
 
             // Bit Pairs Press Release Cyclic Sequence (OFF ON Pair Bits):
-            // 1.    2.    3.    4.  (long press/release)
+            // 1.    2.    3.    4.  (long press/release) (cascate) 1. stand by, 2. triggers cascate
             // 000 | 001 | 011 | 111 for OFF
             // 111 | 110 | 100 | 000 for ON
-            if ((buttonBits & 0b001) == 0b000) {
-                buttonBits = 0b001;
-            } else {
-                buttonBits = 0b110;
-            }	
-            // Sets time since button was physically operated
-            lastTouch = millis();
-        
-        } else if (millis() - lastTouch > (uint32_t)short_press_duration) { // Same state
-            switch (buttonBits) {
-                case 0b110:
-                    buttonBits = 0b100;
-                    button = switchdown;
-                    break;
-                case 0b100:
-                    if (button == pressed && millis() - lastTouch > (uint32_t)long_press_duration) {
-                        buttonBits = 0b000;
-                        button = holddown;
-                    } else {
-                        button = pressed;
-                    }
-                    break;
-                case 0b000:
-                    button = held;
-                    break;
-                case 0b001:
-                    buttonBits = 0b011;
-                    if (button == held || button == holddown) {
-                        button = holdup;
-                    } else {
-                        button = switchup;
-                    }
-                    break;
-                case 0b011:
-                    buttonBits = 0b111;
-                    button = released;
-                    break;
+            if (millis() - last_switch > (uint32_t)short_press_duration) { // triggers cascate
+                if ((buttonBits & 0b001) == 0b000)
+                    buttonBits = 0b001;
+                else
+                    buttonBits = 0b110;
             }
+        } else {
+            // Sets last time since button was physically operated
+            last_switch = millis();
+        }
+        
+        // CASCATE
+        switch (buttonBits) {
+            case 0b110:
+                buttonBits = 0b100;
+                button = switchdown;
+                last_switchdown = millis();
+                break;
+            case 0b100:
+                if (button == pressed && millis() - last_switchdown > (uint32_t)long_press_duration) {
+                    buttonBits = 0b000;
+                    button = holddown;
+                } else {
+                    button = pressed;
+                }
+                break;
+            case 0b000: // ON cascate dead end
+                button = held;
+                break;
+            case 0b001:
+                buttonBits = 0b011;
+                if (button == held || button == holddown) {
+                    button = holdup;
+                } else {
+                    button = switchup;
+                }
+                break;
+            case 0b011: // OFF cascate dead end
+                buttonBits = 0b111;
+                button = released;
+                break;
         }
 
         // ENCODER PROCESSING
