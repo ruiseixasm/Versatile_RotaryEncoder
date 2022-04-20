@@ -1,4 +1,4 @@
-## **Versatile_RotaryEncoder Library V1.1.1** for Arduino
+## **Versatile_RotaryEncoder Library V1.1.2** for Arduino
 **Written by:** _Rui Seixas Monteiro_.
 
 ## Installation
@@ -72,7 +72,7 @@ This functions reads the encoder and runs all Handle functions accordingly. It r
 By default every 2 ms the encoder is readed, you can set a diffrent value with this function.
 
 #### **`Versatile_RotaryEncoder.setShortPressDuration( byte )`**
-By default it's set 30 ms for the encoder switch debounce, you can set a diffrent value with this function.
+By default it's set 50 ms for the encoder switch debounce, you can set a diffrent value with this function.
 
 #### **`Versatile_RotaryEncoder.setLongPressDuration( unsigned int )`**
 By default it's set 1000 ms for the press be considered a long press, you can set a diffrent value with this function.
