@@ -31,7 +31,7 @@ class Versatile_RotaryEncoder {
         uint8_t rotaryBits = 0b11; 		// 8 bits
         uint8_t buttonBits = 0b111; 	// 8 bits
 
-        uint8_t read_interval_duration = 2; // by default reads the encoder each 2ms
+        uint8_t read_interval_duration = 1; // by default reads the encoder each 1ms
         uint8_t short_press_duration = 50; // debounce duration to avoid noise triggering
         uint16_t long_press_duration = 1000;
         uint32_t last_encoder_read = 0;

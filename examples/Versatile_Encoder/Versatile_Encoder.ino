@@ -37,6 +37,11 @@ void setup() {
 
     Serial.println("Ready!");
 
+    // set your own defualt values (optional)
+    // versatile_encoder->setReadIntervalDuration(1); // set 2ms as long press duration (default is 1ms)
+    // versatile_encoder->setShortPressDuration(35); // set 35ms as short press duration (default is 50ms)
+    // versatile_encoder->setLongPressDuration(550); // set 550ms as long press duration (default is 1000ms)
+
 }
 
 void loop() {

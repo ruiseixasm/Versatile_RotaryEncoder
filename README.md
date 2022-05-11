@@ -1,4 +1,4 @@
-## **Versatile_RotaryEncoder Library V1.1.2** for Arduino
+## **Versatile_RotaryEncoder Library V1.1.3** for Arduino
 **Written by:** _Rui Seixas Monteiro_.
 
 ## Installation
@@ -69,7 +69,7 @@ Its only parameter is the handle function as `void (*)()` that would be used to 
 This functions reads the encoder and runs all Handle functions accordingly. It returns a `bool` with true whenever any handle function is called.
 
 #### **`Versatile_RotaryEncoder.setReadIntervalDuration( byte )`**
-By default every 2 ms the encoder is readed, you can set a diffrent value with this function.
+By default every 1 ms the encoder is readed, you can set a diffrent value with this function.
 
 #### **`Versatile_RotaryEncoder.setShortPressDuration( byte )`**
 By default it's set 50 ms for the encoder switch debounce, you can set a diffrent value with this function.
