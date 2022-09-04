@@ -31,6 +31,7 @@ class Versatile_RotaryEncoder {
         uint8_t rotaryBits = 0b11; 		// 8 bits
         uint8_t buttonBits = 0b111; 	// 8 bits
 
+        uint8_t inverted_switch = 0b0; // the default is from vcc to ground
         uint8_t read_interval_duration = 1; // by default reads the encoder each 1ms
         uint8_t short_press_duration = 50; // debounce duration to avoid noise triggering
         uint16_t long_press_duration = 1000;
@@ -54,6 +55,7 @@ class Versatile_RotaryEncoder {
     public:
         Versatile_RotaryEncoder(uint8_t clk, uint8_t dt, uint8_t sw);
         bool ReadEncoder();
+        void setInvertedSwitch(bool invert_switch);
         void setReadIntervalDuration(uint8_t duration);
         void setShortPressDuration(uint8_t duration);
         void setLongPressDuration(uint16_t duration);

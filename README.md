@@ -1,4 +1,4 @@
-## **Versatile_RotaryEncoder Library V1.1.3** for Arduino
+## **Versatile_RotaryEncoder Library V1.2.1** for Arduino
 **Written by:** _Rui Seixas Monteiro_.
 
 ## Installation
@@ -68,13 +68,16 @@ Its only parameter is the handle function as `void (*)()` that would be used to 
 #### **`Versatile_RotaryEncoder.ReadEncoder()`**
 This functions reads the encoder and runs all Handle functions accordingly. It returns a `bool` with true whenever any handle function is called.
 
-#### **`Versatile_RotaryEncoder.setReadIntervalDuration( byte )`**
+#### **`Versatile_RotaryEncoder.setInvertedSwitch( bool invert_switch )`**
+By default the switch is triggered from vcc to ground (HIGH to LOW), using this function you can invert this behaviour from LOW to HIGH.
+
+#### **`Versatile_RotaryEncoder.setReadIntervalDuration( uint8_t duration )`**
 By default every 1 ms the encoder is readed, you can set a diffrent value with this function.
 
-#### **`Versatile_RotaryEncoder.setShortPressDuration( byte )`**
+#### **`Versatile_RotaryEncoder.setShortPressDuration( uint8_t duration )`**
 By default it's set 50 ms for the encoder switch debounce, you can set a diffrent value with this function.
 
-#### **`Versatile_RotaryEncoder.setLongPressDuration( unsigned int )`**
+#### **`Versatile_RotaryEncoder.setLongPressDuration( unsigned int duration )`**
 By default it's set 1000 ms for the press be considered a long press, you can set a diffrent value with this function.
 
 #### **`Versatile_RotaryEncoder.getRotary()`**

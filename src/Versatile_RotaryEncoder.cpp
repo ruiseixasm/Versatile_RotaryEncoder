@@ -30,7 +30,7 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
     
     if (millis() - last_encoder_read >= (uint32_t)read_interval_duration) {
         last_encoder_read = millis();
-        encoderBits = digitalRead(pin_sw) << 2 | digitalRead(pin_clk) << 1 | digitalRead(pin_dt);
+        encoderBits = (inverted_switch^digitalRead(pin_sw)) << 2 | digitalRead(pin_clk) << 1 | digitalRead(pin_dt);
 
         // ROTARY READ
         if ((rotaryBits & 0b11) != (encoderBits & 0b11)) {
@@ -207,6 +207,10 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
     }
 
     return handled_functions;
+}
+
+void Versatile_RotaryEncoder::setInvertedSwitch (bool invert_switch) {
+    inverted_switch = 0b1 & invert_switch;
 }
 
 void Versatile_RotaryEncoder::setReadIntervalDuration (uint8_t duration) {
