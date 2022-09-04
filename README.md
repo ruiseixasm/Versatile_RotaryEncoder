@@ -69,7 +69,7 @@ Its only parameter is the handle function as `void (*)()` that would be used to 
 This functions reads the encoder and runs all Handle functions accordingly. It returns a `bool` with true whenever any handle function is called.
 
 #### **`Versatile_RotaryEncoder.setInvertedSwitch( bool invert_switch )`**
-By default the switch is triggered from vcc to ground (HIGH to LOW), using this function you can invert this behaviour from LOW to HIGH.
+By default the switch is triggered from vcc to ground (HIGH to LOW), using this function you can invert this behavior from LOW to HIGH.
 
 #### **`Versatile_RotaryEncoder.setReadIntervalDuration( uint8_t duration )`**
 By default every 1 ms the encoder is readed, you can set a diffrent value with this function.
