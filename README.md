@@ -66,7 +66,7 @@ This function sets the handle function for the button release of the encoder aft
 Its only parameter is the handle function as `void (*)()` that would be used to process the release encoder switch after being held rotated.
 
 #### **`Versatile_RotaryEncoder.ReadEncoder()`**
-This functions reads the encoder and runs all Handle functions accordingly. It returns a `bool` with true whenever any handle function is called.
+This function reads the encoder and runs all Handle functions accordingly. It returns a `bool` with true whenever any handle function is called.
 
 #### **`Versatile_RotaryEncoder.setInvertedSwitch( bool invert_switch )`**
 By default the switch is triggered from vcc to ground (HIGH to LOW), using this function you can invert this behavior from LOW to HIGH.
@@ -81,23 +81,23 @@ By default it's set 50 ms for the encoder switch debounce, you can set a diffren
 By default it's set 1000 ms for the press be considered a long press, you can set a diffrent value with this function.
 
 #### **`Versatile_RotaryEncoder.getRotary()`**
-This functions returns a `short int` with a positive 1 or negative 1 accordingly to the rotation of the encoder.
+This function returns a `short int` with a positive 1 or negative 1 accordingly to the rotation of the encoder.
 The purpose of this function is to allow a more specific use of the library.
 
 #### **`Versatile_RotaryEncoder.getButton()`**
-This functions returns a `short unsigned int` with a value related to released, holdup, switchup, switchdown, pressed, holddown or held respectively.
+This function returns a `short unsigned int` with a value related to released, holdup, switchup, switchdown, pressed, holddown or held respectively.
 The purpose of this function is to allow a more specific use of the library.
 
 #### **`Versatile_RotaryEncoder.getEncoder()`**
-This functions returns a `short unsigned int` with a value related to inactive, release, press, hold, rotate, pressrotate or heldrotate respectively.
+This function returns a `short unsigned int` with a value related to inactive, release, press, hold, rotate, pressrotate or heldrotate respectively.
 The purpose of this function is to allow a more specific use of the library.
 
 #### **`Versatile_RotaryEncoder.getEncoderBits()`**
-This functions returns a `short unsigned int` representing the last rotary bits set by the encoder.
+This function returns a `short unsigned int` representing the last rotary bits set by the encoder.
 The purpose of this function is to allow a more specific use of the library.
 
 #### **`Versatile_RotaryEncoder.getButtonBits()`**
-This functions returns a `short unsigned int` representing the last button bits set by the encoder.
+This function returns a `short unsigned int` representing the last button bits set by the encoder.
 The purpose of this function is to allow a more specific use of the library.
 
 ### **Examples**
