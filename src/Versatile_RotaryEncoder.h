@@ -20,8 +20,13 @@ class Versatile_RotaryEncoder {
         enum Encoder : uint8_t {inactive, release, press, hold, rotate, pressrotate, heldrotate};
         enum Button : uint8_t {released, holdup, switchup, switchdown, pressed, holddown, held};
         enum Rotary : int8_t {left = -1, stopped, right}; // Don't change these values, other functions are dependent on them
+        #ifndef USE_STD_FUNCTION
         using functionHandleRotary = void (*)(int8_t rotation);
         using functionHandleButton = void (*)();
+        #else
+        using functionHandleRotary = std::function<void(int8_t)>;
+        using functionHandleButton = std::function<void()>;
+        #endif
     private:
         uint8_t pin_clk = 0;
         uint8_t pin_dt = 1;
