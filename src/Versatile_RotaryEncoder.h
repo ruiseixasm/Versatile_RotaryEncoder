@@ -16,7 +16,7 @@
 /**
  * Decomment below line to enable std::function as callbacks
 */
-// #define USE_STD_FUNCTION
+#define USE_STD_FUNCTION
 
 /**
  * Decomment below line to disable double press and receive press event immediately
