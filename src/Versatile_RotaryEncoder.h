@@ -23,6 +23,17 @@
 */
 // #define DISABLE_DOUBLE_PRESS
 
+/**
+ * Decomment below line to use internal pullup resistor
+*/
+#define USE_INTERNAL_PULLUP
+
+#if defined(USE_INTERNAL_PULLUP)
+#define INPUT_TYPE INPUT_PULLUP
+#else
+#define INPUT_TYPE INPUT
+#endif
+
 #include <Arduino.h>
 
 class Versatile_RotaryEncoder {
