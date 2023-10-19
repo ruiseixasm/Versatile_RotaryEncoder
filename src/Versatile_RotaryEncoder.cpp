@@ -19,9 +19,9 @@ Versatile_RotaryEncoder::Versatile_RotaryEncoder(uint8_t clk, uint8_t dt, uint8_
     pin_sw = sw;
 
     // Set encoder pins as inputs
-    pinMode(pin_clk, INPUT);
-    pinMode(pin_dt, INPUT);
-    pinMode(pin_sw, INPUT_PULLUP);
+    pinMode(pin_clk, INPUT_TYPE);
+    pinMode(pin_dt, INPUT_TYPE);
+    pinMode(pin_sw, INPUT_TYPE);
 }
 
 bool Versatile_RotaryEncoder::ReadEncoder() {
@@ -92,10 +92,14 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
                 break;
             case 0b001:
                 buttonBits = 0b011;
-                if (button == held || button == holddown)
+                if (button == held || button == holddown) {
                     button = holdup;
-                else
+                } else {
                     button = switchup;
+                    if(!check_double_press) {
+                        last_switchup = millis();
+                    }
+                }
                 break;
             case 0b110:
                 buttonBits = 0b100;
@@ -147,9 +151,14 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
             switch (button) {
                 case switchup:
                     encoder = release;
-                    if (handlePressRelease != nullptr) {
-                        handlePressRelease();
-                        handled_functions = true;
+                    if(check_double_press && (millis() - last_switchup < double_press_duration)) {
+                        check_double_press = false;
+                        if (handleDoublePressRelease != nullptr) {
+                            handleDoublePressRelease();
+                            handled_functions = true;
+                        }
+                    } else {
+                        check_double_press = true;
                     }
                     break;
                 case holddown:
@@ -206,6 +215,15 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
         }
     }
 
+    if (check_double_press && (millis() - last_switchup > (uint32_t)double_press_duration)) {
+        check_double_press = false;
+        
+        if (handlePressRelease != nullptr) {
+            handlePressRelease();
+            handled_functions = true;
+        }
+    }
+
     return handled_functions;
 }
 
@@ -223,6 +241,10 @@ void Versatile_RotaryEncoder::setShortPressDuration (uint8_t duration) {
 
 void Versatile_RotaryEncoder::setLongPressDuration (uint16_t duration) {
     long_press_duration = duration;
+}
+
+void Versatile_RotaryEncoder::setDoublePressDuration (uint16_t duration) {
+    double_press_duration = duration;
 }
 
 Versatile_RotaryEncoder::Rotary Versatile_RotaryEncoder::getRotary () {
@@ -281,4 +303,8 @@ void Versatile_RotaryEncoder::setHandlePressRotateRelease(functionHandleButton f
 
 void Versatile_RotaryEncoder::setHandleHeldRotateRelease(functionHandleButton function_handler) {
     handleHeldRotateRelease = function_handler;
+}
+
+void Versatile_RotaryEncoder::setHandleDoublePressRelease(functionHandleButton function_handler) {
+    handleDoublePressRelease = function_handler;
 }
