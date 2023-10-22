@@ -9,7 +9,7 @@ Create the folder "libraries" in case it does not exist yet. Place all the files
 To use the library in your own sketch, select it from *Sketch > Import Library*.
 
 ## What is Versatile_RotaryEncoder
-The Versatile_RotaryEncoder library allows the callback of up to 9 different functions representing the same number of different encoder events. These different functions can be associated with events like press rotate and long press among many others.
+The Versatile_RotaryEncoder library allows the callback of up to 10 different functions representing the same number of different encoder events. These different functions can be associated with events like press rotate and long press among many others.
 
 ## Usage
 ### **How to include**
@@ -86,7 +86,7 @@ By default it's set 50 ms for the encoder switch debounce, you can set a differe
 By default it's set 1000 ms for the press be considered a long press, you can set a different value with this function.
 
 #### **`Versatile_RotaryEncoder.setDoublePressDuration( unsigned int duration )`**
-By default it's set up to 250 ms for repeated pressess be considered a double press, you can set a different value with this function.
+By default it's set up to 250 ms for repeated presses be considered a double press, you can set a different value with this function.
 
 #### **`Versatile_RotaryEncoder.getRotary()`**
 This function returns a `short int` with a positive 1 or negative 1 accordingly to the rotation of the encoder.
@@ -109,20 +109,22 @@ This function returns a `short unsigned int` representing the last button bits s
 The purpose of this function is to allow a more specific use of the library.
 
 ### **Examples**
-#### **Exaustive usage of all possible 9 functions**
+#### **Exhaustive usage of all possible 10 functions**
 ```Arduino
 #include <Versatile_RotaryEncoder.h>
 
+// SET READING PINS ACCORDINGLY TO YOUR ENCODER TO BOARD CONNECTIONS
 // Set here your encoder reading pins (Ex.: EC11 with breakout board)
 #define clk 17  // (A3)
-#define dt 18   // (A4)
-#define sw 19   // (A5)
+#define dt 16   // (A2)
+#define sw 18   // (A4)
 
 // Functions prototyping to be handled on each Encoder Event
 void handleRotate(int8_t rotation);
 void handlePressRotate(int8_t rotation);
 void handleHeldRotate(int8_t rotation);
 void handlePress();
+void handleDoublePress();
 void handlePressRelease();
 void handleLongPress();
 void handleLongPressRelease();
@@ -133,15 +135,17 @@ void handleHeldRotateRelease();
 Versatile_RotaryEncoder *versatile_encoder;
 
 void setup() {
-  
+
     Serial.begin(9600);
 	versatile_encoder = new Versatile_RotaryEncoder(clk, dt, sw);
 
-    // Load to the encoder all nedded handle functions here (up to 9 functions)
+    // Load to the encoder all nedded handle functions here (up to 10 functions)
     versatile_encoder->setHandleRotate(handleRotate);
     versatile_encoder->setHandlePressRotate(handlePressRotate);
     versatile_encoder->setHandleHeldRotate(handleHeldRotate);
     versatile_encoder->setHandlePress(handlePress);
+    versatile_encoder->setHandleDoublePress(handleDoublePress);
+    //versatile_encoder->setHandleDoublePress(nullptr); // Disables Double Press
     versatile_encoder->setHandlePressRelease(handlePressRelease);
     versatile_encoder->setHandleLongPress(handleLongPress);
     versatile_encoder->setHandleLongPressRelease(handleLongPressRelease);
@@ -149,6 +153,13 @@ void setup() {
     versatile_encoder->setHandleHeldRotateRelease(handleHeldRotateRelease);
 
     Serial.println("Ready!");
+
+    // set your own defualt values (optional)
+    // versatile_encoder->setInvertedSwitch(true); // inverts the switch behaviour from HIGH to LOW to LOW to HIGH
+    // versatile_encoder->setReadIntervalDuration(1); // set 2ms as long press duration (default is 1ms)
+    // versatile_encoder->setShortPressDuration(35); // set 35ms as short press duration (default is 50ms)
+    // versatile_encoder->setLongPressDuration(550); // set 550ms as long press duration (default is 1000ms)
+    // versatile_encoder->setDoublePressDuration(350); // set 350ms as double press duration (default is 250ms)
 
 }
 
@@ -188,7 +199,11 @@ void handleHeldRotate(int8_t rotation) {
 }
 
 void handlePress() {
-	Serial.println("#4 Pressed");
+	Serial.println("#4.1 Pressed");
+}
+
+void handleDoublePress() {
+	Serial.println("#4.2 Double Pressed");
 }
 
 void handlePressRelease() {
