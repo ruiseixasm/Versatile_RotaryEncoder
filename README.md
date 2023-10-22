@@ -1,4 +1,4 @@
-## **Versatile_RotaryEncoder Library V1.2.1** for Arduino
+## **Versatile_RotaryEncoder Library V1.3.1** for Arduino
 **Written by:** _Rui Seixas Monteiro_.
 
 ## Installation
@@ -45,6 +45,11 @@ Its only parameter is the handle function as `void (*)(int8_t rotation)` that wo
 This function sets the handle function for the button press of the encoder.
 Its only parameter is the handle function as `void (*)()` that would be used to process the pressed encoder switch.
 
+#### **`Versatile_RotaryEncoder.setHandleDoublePress( void (*)() )`**
+This function sets the handle function for the button double press of the encoder.
+Its only parameter is the handle function as `void (*)()` that would be used to process the double pressed encoder switch.
+Giving the function value of 'nullptr' will completly disable the double press feature!
+
 #### **`Versatile_RotaryEncoder.setHandlePressRelease( void (*)() )`**
 This function sets the handle function for the button release of the encoder.
 Its only parameter is the handle function as `void (*)()` that would be used to process the released encoder switch.
@@ -72,13 +77,16 @@ This function reads the encoder and runs all Handle functions accordingly. It re
 By default the switch is triggered from vcc to ground (HIGH to LOW), using this function you can invert this behavior from LOW to HIGH.
 
 #### **`Versatile_RotaryEncoder.setReadIntervalDuration( uint8_t duration )`**
-By default every 1 ms the encoder is readed, you can set a diffrent value with this function.
+By default every 1 ms the encoder is readed, you can set a different value with this function.
 
 #### **`Versatile_RotaryEncoder.setShortPressDuration( uint8_t duration )`**
-By default it's set 50 ms for the encoder switch debounce, you can set a diffrent value with this function.
+By default it's set 50 ms for the encoder switch debounce, you can set a different value with this function.
 
 #### **`Versatile_RotaryEncoder.setLongPressDuration( unsigned int duration )`**
-By default it's set 1000 ms for the press be considered a long press, you can set a diffrent value with this function.
+By default it's set 1000 ms for the press be considered a long press, you can set a different value with this function.
+
+#### **`Versatile_RotaryEncoder.setDoublePressDuration( unsigned int duration )`**
+By default it's set up to 250 ms for repeated pressess be considered a double press, you can set a different value with this function.
 
 #### **`Versatile_RotaryEncoder.getRotary()`**
 This function returns a `short int` with a positive 1 or negative 1 accordingly to the rotation of the encoder.

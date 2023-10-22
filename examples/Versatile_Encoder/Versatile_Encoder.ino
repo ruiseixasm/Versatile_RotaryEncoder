@@ -1,15 +1,17 @@
 #include <Versatile_RotaryEncoder.h>
 
+// SET READING PINS ACCORDINGLY TO YOUR ENCODER TO BOARD CONNECTIONS
 // Set here your encoder reading pins (Ex.: EC11 with breakout board)
 #define clk 17  // (A3)
-#define dt 18   // (A4)
-#define sw 19   // (A5)
+#define dt 16   // (A2)
+#define sw 18   // (A4)
 
 // Functions prototyping to be handled on each Encoder Event
 void handleRotate(int8_t rotation);
 void handlePressRotate(int8_t rotation);
 void handleHeldRotate(int8_t rotation);
 void handlePress();
+void handleDoublePress();
 void handlePressRelease();
 void handleLongPress();
 void handleLongPressRelease();
@@ -29,6 +31,8 @@ void setup() {
     versatile_encoder->setHandlePressRotate(handlePressRotate);
     versatile_encoder->setHandleHeldRotate(handleHeldRotate);
     versatile_encoder->setHandlePress(handlePress);
+    versatile_encoder->setHandleDoublePress(handleDoublePress);
+    //versatile_encoder->setHandleDoublePress(nullptr); // Disables Double Press
     versatile_encoder->setHandlePressRelease(handlePressRelease);
     versatile_encoder->setHandleLongPress(handleLongPress);
     versatile_encoder->setHandleLongPressRelease(handleLongPressRelease);
@@ -42,6 +46,7 @@ void setup() {
     // versatile_encoder->setReadIntervalDuration(1); // set 2ms as long press duration (default is 1ms)
     // versatile_encoder->setShortPressDuration(35); // set 35ms as short press duration (default is 50ms)
     // versatile_encoder->setLongPressDuration(550); // set 550ms as long press duration (default is 1000ms)
+    // versatile_encoder->setDoublePressDuration(350); // set 350ms as double press duration (default is 250ms)
 
 }
 
@@ -81,7 +86,11 @@ void handleHeldRotate(int8_t rotation) {
 }
 
 void handlePress() {
-	Serial.println("#4 Pressed");
+	Serial.println("#4.1 Pressed");
+}
+
+void handleDoublePress() {
+	Serial.println("#4.2 Double Pressed");
 }
 
 void handlePressRelease() {

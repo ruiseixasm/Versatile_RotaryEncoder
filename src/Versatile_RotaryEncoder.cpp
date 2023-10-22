@@ -1,5 +1,5 @@
 /*
-  Versatile_RotaryEncoder.cpp - Robust_EEPROM library
+  Versatile_RotaryEncoder.cpp - Versatile_RotaryEncoder library
   Original Copyright (c) 2022 Rui Seixas Monteiro. All right reserved.
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -19,9 +19,9 @@ Versatile_RotaryEncoder::Versatile_RotaryEncoder(uint8_t clk, uint8_t dt, uint8_
     pin_sw = sw;
 
     // Set encoder pins as inputs
-    pinMode(pin_clk, INPUT);
-    pinMode(pin_dt, INPUT);
-    pinMode(pin_sw, INPUT_PULLUP);
+    pinMode(pin_clk, INPUT_TYPE);
+    pinMode(pin_dt, INPUT_TYPE);
+    pinMode(pin_sw, INPUT_TYPE);
 }
 
 bool Versatile_RotaryEncoder::ReadEncoder() {
@@ -79,10 +79,10 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
                 button = held;
                 break;
             case 0b100:
-                if (button == pressed && millis() - last_switchdown > (uint32_t)long_press_duration) {
+                if ((button == pressed || button == double_switchdown) && millis() - last_switchdown > (uint32_t)long_press_duration) {
                     buttonBits = 0b000;
                     button = holddown;
-                } else {
+                } else if (button == switchdown) {
                     button = pressed;
                 }
                 break;
@@ -100,6 +100,9 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
             case 0b110:
                 buttonBits = 0b100;
                 button = switchdown;
+                if (handleDoublePress != nullptr && millis() - last_switchdown < (uint32_t)double_press_duration) {
+                    button = double_switchdown;
+                }
                 last_switchdown = millis();
                 break;
         }
@@ -139,11 +142,16 @@ bool Versatile_RotaryEncoder::ReadEncoder() {
                         handled_functions = true;
                     }
                     break;
+                case double_switchdown:
+                    encoder = double_press;
+                    handleDoublePress();
+                    handled_functions = true;
+                    break;
                 default:
                     // do nothing
                     break;
             }
-        } else if (encoder == press) {
+        } else if (encoder == press || encoder == double_press) {
             switch (button) {
                 case switchup:
                     encoder = release;
@@ -225,6 +233,10 @@ void Versatile_RotaryEncoder::setLongPressDuration (uint16_t duration) {
     long_press_duration = duration;
 }
 
+void Versatile_RotaryEncoder::setDoublePressDuration (uint16_t duration) {
+    double_press_duration = duration;
+}
+
 Versatile_RotaryEncoder::Rotary Versatile_RotaryEncoder::getRotary () {
     return rotary;
 }
@@ -261,6 +273,10 @@ void Versatile_RotaryEncoder::setHandleHeldRotate(functionHandleRotary function_
 
 void Versatile_RotaryEncoder::setHandlePress(functionHandleButton function_handler) {
     handlePress = function_handler;
+}
+
+void Versatile_RotaryEncoder::setHandleDoublePress(functionHandleButton function_handler) {
+    handleDoublePress = function_handler;
 }
 
 void Versatile_RotaryEncoder::setHandlePressRelease(functionHandleButton function_handler) {
